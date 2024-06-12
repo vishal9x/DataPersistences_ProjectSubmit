@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ public class MainManager : MonoBehaviour
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text BestScoreNameText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -22,6 +24,20 @@ public class MainManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //if(MenuManager.instance.HighestScore<m_Points)
+        //{
+        //    MenuManager.instance.HighestScore = m_Points;
+        //    BestScoreNameText.text = "Best score: " + MenuManager.instance.PlayerName + ": " + m_Points;
+        //}
+
+        print("start MenuManager.instance.HighestScore:="+ MenuManager.instance.HighestScore);
+        print("start m_Points:=" + m_Points);
+        if(MenuManager.instance.HighestScore>m_Points)
+        {
+            BestScoreNameText.text = "Best score: " + MenuManager.instance.PlayerName + ": " + MenuManager.instance.HighestScore;
+        }
+
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -72,5 +88,23 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+
+        if(m_Points>0)
+        {
+            print("end MenuManager.instance.HighestScore:=" + MenuManager.instance.HighestScore);
+            print("end m_Points:=" + m_Points);
+            if (m_Points>MenuManager.instance.HighestScore)
+            {
+                BestScoreNameText.text = "Best score: " + MenuManager.instance.currentPlayerName + ": " + m_Points;
+                MenuManager.instance.PlayerName = MenuManager.instance.currentPlayerName;
+                MenuManager.instance.HighestScore = m_Points;
+            }
+            //else
+            //{
+            //    BestScoreNameText.text = "Best score: "+MenuManager.instance.PlayerName+": "+ m_Points;
+            //}
+        }
+
+        MenuManager.instance.SaveGameData();
     }
 }
